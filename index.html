@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>POKEM</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0a0b0f">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600;700&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,300,0,0&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div id="intro-ov" class="intro-overlay"></div>
+
+<div id="hud">
+  <div class="hud-logo">POKEM</div>
+  <div class="hud-gold"><span class="ms" style="font-size:16px;color:var(--gold)">paid</span> <span id="hud-gold">0</span></div>
+  <div class="hud-avatar" id="hud-avatar-wrap"><img id="hud-avatar-img" src="" onerror="this.style.display='none'" alt=""></div>
+  <div class="hud-team" id="hud-team"></div>
+  <button class="hud-map-btn" onclick="openMapSelect()"><span class="ms" style="font-size:18px">map</span></button>
+</div>
+<div id="notif"></div>
+<div id="main">
+  <div id="screen-radar" class="screen" style="display:flex">
+    <div class="radar-left">
+      <canvas id="radar-canvas" width="330" height="330"></canvas>
+      <div id="radar-coords">X:0 Y:0</div>
+      <div style="display:flex;gap:6px;align-items:center">
+        <div class="dpad">
+          <button class="dpad-btn" onclick="move(-1,-1)">&#8598;</button>
+          <button class="dpad-btn" onclick="move(0,-1)">&#8593;</button>
+          <button class="dpad-btn" onclick="move(1,-1)">&#8599;</button>
+          <button class="dpad-btn" onclick="move(-1,0)">&#8592;</button>
+          <div class="dpad-center"><span class="ms" style="font-size:18px;color:var(--dim)">gps_fixed</span></div>
+          <button class="dpad-btn" onclick="move(1,0)">&#8594;</button>
+          <button class="dpad-btn" onclick="move(-1,1)">&#8601;</button>
+          <button class="dpad-btn" onclick="move(0,1)">&#8595;</button>
+          <button class="dpad-btn" onclick="move(1,1)">&#8600;</button>
+        </div>
+        <button class="map-info-btn" onclick="openMapInfo()" title="Info del mapa">
+          <span class="ms" style="font-size:20px">info</span>
+        </button>
+      </div>
+    </div>
+    <div class="radar-right">
+      <div class="spawn-panel">
+        <h3>APARICIONES</h3>
+        <div id="spawn-list"><div class="no-spawn">Muévete para encontrar Pokémon...</div></div>
+      </div>
+    </div>
+  </div>
+  <div id="screen-battle" class="screen"></div>
+  <div id="screen-team" class="screen"></div>
+  <div id="screen-pc" class="screen"></div>
+  <div id="screen-shop" class="screen"></div>
+  <div id="screen-inventory" class="screen"></div>
+  <div id="screen-trainers" class="screen"></div>
+  <div id="screen-codes" class="screen"></div>
+  <div id="screen-profile" class="screen"></div>
+</div>
+<nav id="nav">
+  <button class="nav-btn active" data-s="radar" onclick="goTo('radar')"><span class="ms">radar</span>Radar</button>
+  <button class="nav-btn" data-s="team" onclick="goTo('team')"><span class="ms">swords</span>Equipo</button>
+  <button class="nav-btn" data-s="pc" onclick="goTo('pc')"><span class="ms">computer</span>PC</button>
+  <button class="nav-btn" data-s="shop" onclick="goTo('shop')"><span class="ms">storefront</span>Tienda</button>
+  <button class="nav-btn" data-s="inventory" onclick="goTo('inventory')"><span class="ms">backpack</span>Items</button>
+  <button class="nav-btn" data-s="trainers" onclick="goTo('trainers')"><span class="ms">military_tech</span>Gyms</button>
+  <button class="nav-btn" data-s="codes" onclick="goTo('codes')"><span class="ms">redeem</span>Código</button>
+  <button class="nav-btn" data-s="profile" onclick="goTo('profile')"><span class="ms">person</span>Perfil</button>
+</nav>
+<div id="enc-ov" class="overlay" onclick="if(event.target===this)closeOv('enc-ov')"></div>
+<div id="map-ov" class="overlay" onclick="if(event.target===this)closeOv('map-ov')"></div>
+<div id="evo-ov" class="overlay"></div>
+
+<script src="app.js"></script>
+<script>if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js');}</script>
+</body>
+</html>
