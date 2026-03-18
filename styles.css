@@ -4,6 +4,29 @@
   --green:#2ecc71;--gold:#f7d02c;--purple:#9b59b6;
   --font:'Rajdhani',sans-serif;
 }
+
+/* Botón de mapa en HUD */
+.hud-map-btn{
+position:absolute;
+  top:60px;
+  right:10px;
+  z-index:5;
+  background:rgba(10,11,15,.75);
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:10px;
+  width:38px;
+  height:38px;
+  color:var(--blue);
+  cursor:pointer;
+  padding:4px 8px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.hud-map-btn .ms, .radar-info-btn .ms {
+font-size: 22px!important;
+}
+
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--font);overflow:hidden;}
 .ms{font-family:'Material Symbols Outlined';font-style:normal;font-size:22px;line-height:1;
@@ -24,9 +47,6 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--f
   display:flex;align-items:center;justify-content:center;overflow:hidden;}
 .hud-slot img{width:26px;height:26px;image-rendering:pixelated;object-fit:contain;}
 .hud-slot.empty{opacity:.4;}
-.hud-map-btn{background:var(--card2);border:1px solid var(--brd);border-radius:8px;
-  padding:4px 8px;color:var(--text);cursor:pointer;transition:.15s;}
-.hud-map-btn:hover{border-color:var(--blue);}
 
 /* NOTIF */
 #notif{position:fixed;top:56px;left:50%;transform:translateX(-50%) translateY(-10px);
@@ -94,10 +114,8 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--f
 .stag{display:inline-block;padding:1px 5px;border-radius:5px;font-size:9px;font-weight:700;color:#fff;letter-spacing:.3px;}
 
 /* VARIANT ICONS */
-.v-shiny{color:var(--gold)!important;text-shadow:0 0 8px rgba(247,208,44,.6);}
-.v-dark{color:#e74c3c!important;text-shadow:0 0 8px rgba(231,76,60,.6);}
-.vname-shiny{background:linear-gradient(90deg,#f7d02c,#fff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
-.vname-dark{background:linear-gradient(90deg,#e74c3c,#8b0000);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.v-shiny{color:var(--gold)!important;text-shadow:0 0 4px rgba(247,208,44,.6);font-size: 14px!important;}
+.v-dark{color:#e74c3c!important;text-shadow:0 0 4px rgba(231,76,60,.6);font-size: 14px!important;}
 
 /* OVERLAYS */
 .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);
@@ -192,7 +210,6 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--f
 .pkm-name{font-size:15px;font-weight:700;}
 .pkm-lv{font-size:12px;color:var(--dim);}
 .pkm-tags{display:flex;align-items:center;gap:5px;flex-wrap:wrap;margin-top:2px;}
-.rtag{font-size:10px;font-weight:700;}
 .faint-tag{display:flex;align-items:center;gap:2px;color:var(--acc);font-size:10px;font-weight:700;}
 .evo-ready-tag{background:rgba(247,208,44,.1);border:1px solid rgba(247,208,44,.3);
   border-radius:8px;padding:4px 10px;font-size:11px;color:var(--gold);cursor:pointer;
@@ -395,90 +412,461 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--f
   .starter-grid{grid-template-columns:repeat(4,1fr);}
 }
 
-/* ============================================================
-   RADAR FULLSCREEN
-   ============================================================ */
-#screen-radar{padding:0!important;overflow:hidden!important;position:relative;}
-.radar-container{position:relative;width:100%;height:100%;overflow:hidden;}
-#radar-canvas{position:absolute;inset:0;width:100%;height:100%;display:block;image-rendering:pixelated;touch-action:none;}
-.map-coords-ov{position:absolute;top:10px;left:10px;z-index:10;background:rgba(10,11,15,.78);border:1px solid rgba(255,255,255,.12);border-radius:8px;padding:4px 9px;font-size:9px;color:var(--dim);font-family:monospace;pointer-events:none;backdrop-filter:blur(4px);}
-.map-info-ov-btn{position:absolute;top:10px;right:10px;z-index:10;background:rgba(10,11,15,.78);border:1px solid rgba(255,255,255,.12);border-radius:10px;width:38px;height:38px;display:flex;align-items:center;justify-content:center;color:var(--blue);cursor:pointer;backdrop-filter:blur(4px);}
-.map-info-ov-btn:hover{border-color:var(--blue);}
-/* Spawn overlay bottom-left */
-.spawn-ov{position:absolute;bottom:80px;left:8px;z-index:10;background:rgba(10,11,15,.88);border:1px solid rgba(255,255,255,.1);border-radius:12px;max-width:200px;width:50vw;backdrop-filter:blur(8px);}
-.spawn-ov-header{display:flex;align-items:center;gap:6px;padding:7px 10px;cursor:pointer;}
-.spawn-count-badge{background:rgba(247,208,44,.2);color:var(--gold);border-radius:10px;padding:1px 6px;font-size:9px;font-weight:700;}
-.spawn-ov-body{display:flex;flex-direction:column;gap:4px;padding:0 6px 6px;max-height:40vh;overflow-y:auto;}
-.spawn-item-ov{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:8px;padding:5px 6px;cursor:pointer;transition:.15s;}
-.spawn-item-ov:hover,.spawn-item-ov:active{background:rgba(52,152,219,.12);border-color:rgba(52,152,219,.3);}
-.spawn-item-ov.spawn-near{border-color:rgba(57,255,20,.4)!important;background:rgba(57,255,20,.05)!important;}
-.spawn-item-ov.spawn-shiny{border-color:rgba(247,208,44,.35)!important;background:rgba(247,208,44,.04)!important;}
-.spawn-item-ov.spawn-dark{border-color:rgba(231,76,60,.3)!important;background:rgba(231,76,60,.04)!important;}
+/* ===== RADAR FULLSCREEN ===== */
+#screen-radar{
+  padding:0!important;
+  overflow:hidden!important;
+  height:100%!important;
+  position:relative!important;
+}
+.radar-wrap{
+  position:relative;
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  background:#111;
+}
+.radar-canvas{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  display:block;
+  touch-action:none;
+}
+/* Coordenadas top-left */
+.radar-coords{
+  position:absolute;
+  top:10px;
+  left:10px;
+  z-index:5;
+  background:rgba(10,11,15,.75);
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:8px;
+  padding:4px 9px;
+  font-size:9px;
+  color:var(--dim);
+  font-family:monospace;
+  pointer-events:none;
+}
+/* Info btn top-right */
+.radar-info-btn{
+  position:absolute;
+  top:10px;
+  right:10px;
+  z-index:5;
+  background:rgba(10,11,15,.75);
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:10px;
+  width:38px;
+  height:38px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:var(--blue);
+  cursor:pointer;
+}
+/* Spawn panel overlay bottom-left */
+.spawn-panel-ov{
+  position:absolute;
+  bottom:76px;
+  left:8px;
+  z-index:5;
+  background:rgba(10,11,15,.9);
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:12px;
+  width:195px;
+  max-width:55vw;
+}
+.spawn-panel-hdr{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  padding:7px 10px;
+  cursor:pointer;
+}
+.spawn-cnt-badge{
+  background:rgba(247,208,44,.18);
+  color:var(--gold);
+  border-radius:8px;
+  padding:1px 5px;
+  font-size:9px;
+  font-weight:700;
+}
+.spawn-list-ov{
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+  padding:0 6px 6px;
+  max-height:38vh;
+  overflow-y:auto;
+}
+.sov-item{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.07);
+  border-radius:8px;
+  padding:5px 6px;
+  cursor:pointer;
+  transition:.12s;
+}
+.sov-item:active{opacity:.7;}
+.sov-near{border-color:rgba(57,255,20,.4)!important;background:rgba(57,255,20,.05)!important;}
+.sov-shiny{border-color:rgba(247,208,44,.35)!important;background:rgba(247,208,44,.04)!important;}
+.sov-dark{border-color:rgba(231,76,60,.3)!important;background:rgba(231,76,60,.04)!important;}
 .no-spawn-ov{font-size:10px;color:var(--dim);text-align:center;padding:8px;}
 /* D-pad overlay bottom-right */
-.dpad-ov{position:absolute;bottom:12px;right:10px;z-index:10;display:flex;flex-direction:column;align-items:center;gap:3px;}
-.dpad-row{display:flex;align-items:center;gap:3px;}
-.dpad-btn-ov{width:50px;height:50px;background:rgba(10,11,15,.8);border:1px solid rgba(255,255,255,.15);border-radius:14px;color:var(--text);font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(6px);user-select:none;-webkit-user-select:none;touch-action:manipulation;transition:.1s;}
-.dpad-btn-ov:active{background:rgba(52,152,219,.3);border-color:var(--blue);transform:scale(.9);}
-.dpad-center-ov{width:50px;height:50px;background:rgba(10,11,15,.6);border:1px solid rgba(255,255,255,.07);border-radius:14px;display:flex;align-items:center;justify-content:center;}
-/* Map info list */
+.dpad-ov{
+  position:absolute;
+  bottom:10px;
+  right:10px;
+  z-index:5;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:3px;
+}
+.dov-row{display:flex;align-items:center;gap:3px;}
+.dov-btn{
+  width:50px;
+  height:50px;
+  background:rgba(10,11,15,.8);
+  border:1px solid rgba(255,255,255,.15);
+  border-radius:14px;
+  color:var(--text);
+  font-size:20px;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  user-select:none;
+  -webkit-user-select:none;
+  touch-action:manipulation;
+  transition:.1s;
+}
+.dov-btn:active{background:rgba(52,152,219,.35);border-color:var(--blue);transform:scale(.88);}
+.dov-center{
+  width:50px;
+  height:50px;
+  background:rgba(10,11,15,.6);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:14px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
 .map-info-list{display:flex;flex-direction:column;gap:6px;width:100%;}
 .map-info-pkm{display:flex;align-items:center;gap:8px;background:var(--card2);border:1px solid var(--brd);border-radius:8px;padding:6px 8px;}
-/* HUD avatar placeholder */
-.hud-avatar{position:relative;display:flex;align-items:center;justify-content:center;}
-#hud-avatar-ph{position:absolute;}
+/* HUD avatar */
+.hud-avatar{position:relative;display:flex;align-items:center;justify-content:center;background:var(--card2);}
 #hud-avatar-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:50%;}
+#hud-avatar-ph{position:absolute;}
 /* Nav battle lock */
-.nav-battle-lock{opacity:.3!important;pointer-events:none!important;}
-/* PC Controls */
-.pc-controls{display:flex;flex-direction:column;gap:8px;margin-bottom:10px;}
-.pc-search-wrap{display:flex;align-items:center;gap:6px;background:var(--card2);border:1px solid var(--brd);border-radius:10px;padding:8px 12px;}
-.pc-search-in{flex:1;background:none;border:none;color:var(--text);font-family:var(--font);font-size:13px;outline:none;}
-.pc-clear-search{background:none;border:none;color:var(--dim);cursor:pointer;padding:2px;display:flex;align-items:center;}
-.pc-pagination{display:flex;align-items:center;justify-content:center;gap:12px;padding:12px 0;}
-.page-btn{background:var(--card2);border:1px solid var(--brd);border-radius:8px;padding:6px 10px;color:var(--text);cursor:pointer;transition:.15s;display:flex;align-items:center;}
-.page-btn:disabled{opacity:.3;cursor:not-allowed;}
-.page-btn:not(:disabled):hover{border-color:var(--blue);}
-.page-info{font-size:12px;color:var(--dim);font-weight:700;}
+.nav-battle-lock{opacity:.28!important;pointer-events:none!important;}
+/* Rarity tags */
+/* 
+
+/* ============================================================
+   RARITY TAGS - PLACA CON EFECTOS INTERNO
+   ============================================================ */
+
+.rtag {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  text-transform: capitalize;
+  border: 1px solid transparent;
+  position: relative;
+  overflow: hidden;
+  font-family: inherit;
+}
+
+/* ============================================================
+   COMÚN - Placa limpia gris
+   ============================================================ */
+.rar-normal {
+  color: #95a5a6;
+  background: rgba(149, 165, 166, 0.15);
+  border-color: rgba(149, 165, 166, 0.3);
+}
+
+/* ============================================================
+   PSEUDO - Placa azul tech
+   ============================================================ */
+.rar-pseudo {
+  color: #3498db;
+  background: linear-gradient(135deg, 
+    rgba(52, 152, 219, 0.2) 0%, 
+    rgba(52, 152, 219, 0.1) 100%
+  );
+  border-color: rgba(52, 152, 219, 0.4);
+}
+
+/* ============================================================
+   ESPECIAL - ULTRA PLACA Blanco-Lila-Azulado
+   ============================================================ */
+.rar-especial {
+  color: #a29bfe;
+  background: linear-gradient(135deg, 
+    rgba(255, 255, 255, 0.15) 0%,
+    rgba(200, 200, 255, 0.2) 25%,
+    rgba(150, 180, 255, 0.25) 50%,
+    rgba(180, 150, 255, 0.2) 75%,
+    rgba(220, 220, 255, 0.15) 100%
+  );
+  border-color: rgba(180, 180, 255, 0.5);
+  position: relative;
+}
+
+/* Shine sweep interno */
+.rar-especial::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.3) 50%,
+    transparent 100%
+  );
+  animation: shineSweep 2.5s ease-in-out infinite;
+  border-radius: 6px;
+}
+
+/* Glow interno pulsante */
+.rar-especial::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center,
+    rgba(200, 200, 255, 0.3) 0%,
+    transparent 70%
+  );
+  animation: pulseGlow 2s ease-in-out infinite;
+  border-radius: 6px;
+  pointer-events: none;
+}
+
+/* ============================================================
+   LEGENDARIO - Placa Dorada Divina
+   ============================================================ */
+.rar-legendario {
+  color: #f7d02c;
+  background: linear-gradient(135deg, 
+    rgba(247, 208, 44, 0.25) 0%,
+    rgba(255, 215, 0, 0.2) 25%,
+    rgba(218, 165, 32, 0.25) 50%,
+    rgba(255, 215, 0, 0.2) 75%,
+    rgba(247, 208, 44, 0.25) 100%
+  );
+  border-color: rgba(247, 208, 44, 0.5);
+  position: relative;
+}
+
+/* Shine dorado */
+.rar-legendario::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(255, 255, 200, 0.4) 50%,
+    transparent 100%
+  );
+  animation: shineSweep 2s ease-in-out infinite;
+  border-radius: 6px;
+}
+
+/* Aura dorada interna */
+.rar-legendario::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center,
+    rgba(255, 215, 0, 0.35) 0%,
+    transparent 70%
+  );
+  animation: pulseGlow 1.8s ease-in-out infinite;
+  border-radius: 6px;
+  pointer-events: none;
+}
+
+/* ============================================================
+   SINGULAR - Placa Carmesí Mítica
+   ============================================================ */
+.rar-singular {
+  color: #e74c3c;
+  background: linear-gradient(135deg, 
+    rgba(231, 76, 60, 0.25) 0%,
+    rgba(192, 57, 43, 0.2) 25%,
+    rgba(142, 36, 36, 0.25) 50%,
+    rgba(192, 57, 43, 0.2) 75%,
+    rgba(231, 76, 60, 0.25) 100%
+  );
+  border-color: rgba(231, 76, 60, 0.5);
+  position: relative;
+}
+
+/* Shine carmesí */
+.rar-singular::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(255, 100, 100, 0.35) 50%,
+    transparent 100%
+  );
+  animation: shineSweep 1.8s ease-in-out infinite;
+  border-radius: 6px;
+}
+
+/* Void interno */
+.rar-singular::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center,
+    rgba(255, 80, 80, 0.3) 0%,
+    transparent 70%
+  );
+  animation: pulseGlow 1.5s ease-in-out infinite;
+  border-radius: 6px;
+  pointer-events: none;
+}
+
+/* ============================================================
+   ANIMACIONES
+   ============================================================ */
+@keyframes shineSweep {
+  0% { left: -100%; }
+  100% { left: 200%; }
+}
+
+@keyframes pulseGlow {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+
+/* Variant names */
+.vname-shiny{background:linear-gradient(90deg,#f7d02c,#fff9c4,#f7d02c);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-size:200%;animation:sShiny 2s linear infinite;}
+.vname-dark{background:linear-gradient(90deg,#e74c3c,#8b0000,#e74c3c);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-size:200%;animation:sDark 2s linear infinite;}
+@keyframes sShiny{0%{background-position:0%;}100%{background-position:200%;}}
+@keyframes sDark{0%{background-position:0%;}100%{background-position:200%;}}
+/* Card variants */
+.card-shiny{border-color:rgba(247,208,44,.4)!important;background:rgba(247,208,44,.03)!important;}
+.card-dark{border-color:rgba(231,76,60,.3)!important;background:rgba(231,76,60,.03)!important;}
+/* HUD slot variants */
+.hud-slot-shiny{border-color:rgba(247,208,44,.6);box-shadow:0 0 5px rgba(247,208,44,.3);}
+.hud-slot-dark{border-color:rgba(231,76,60,.5);box-shadow:0 0 5px rgba(231,76,60,.25);}
 /* View mode */
 .view-mode-bar{display:flex;gap:6px;margin-bottom:10px;}
 .vm-btn{display:flex;align-items:center;gap:4px;padding:6px 12px;border-radius:8px;background:var(--card2);border:1px solid var(--brd);color:var(--dim);font-family:var(--font);font-size:11px;font-weight:700;cursor:pointer;transition:.15s;}
 .vm-btn.active{background:rgba(52,152,219,.12);color:var(--blue);border-color:rgba(52,152,219,.35);}
-/* Profile hero WhatsApp style */
-#screen-profile{padding:0!important;overflow-y:auto!important;}
-.profile-hero{position:relative;width:100%;height:200px;overflow:hidden;background:var(--card2);}
+/* PC controls */
+.pc-ctrl-row{display:flex;gap:8px;align-items:center;margin-bottom:10px;flex-wrap:wrap;}
+.pc-search-wrap{flex:1;min-width:160px;display:flex;align-items:center;gap:6px;background:var(--card2);border:1px solid var(--brd);border-radius:10px;padding:8px 12px;}
+.pc-search-in{flex:1;background:none;border:none;color:var(--text);font-family:var(--font);font-size:13px;outline:none;}
+.pc-clear-btn{background:none;border:none;color:var(--dim);cursor:pointer;padding:2px;display:flex;align-items:center;}
+.pc-pagination{display:flex;align-items:center;justify-content:center;gap:12px;padding:12px 0;}
+.page-btn{background:var(--card2);border:1px solid var(--brd);border-radius:8px;padding:6px 10px;color:var(--text);cursor:pointer;display:flex;align-items:center;}
+.page-btn:disabled{opacity:.3;cursor:not-allowed;}
+.page-info{font-size:12px;color:var(--dim);font-weight:700;}
+/* Profile hero */
+#screen-profile{padding:0!important;}
+.profile-hero{position:relative;width:100%;height:200px;overflow:hidden;background:var(--card2);flex-shrink:0;}
 .profile-hero img{width:100%;height:100%;object-fit:cover;display:block;}
-.profile-hero-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(10,11,15,.92) 0%,rgba(10,11,15,.1) 60%,transparent 100%);display:flex;align-items:flex-end;padding:12px 14px;gap:8px;}
+.profile-hero-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(10,11,15,.92) 0%,rgba(10,11,15,.1) 55%,transparent 100%);display:flex;align-items:flex-end;padding:12px 14px;gap:8px;}
 .profile-hero-name{flex:1;font-family:'Orbitron',sans-serif;font-size:18px;font-weight:700;color:#fff;text-shadow:0 1px 6px rgba(0,0,0,.9);}
-.prof-hero-btn{background:rgba(10,11,15,.7);border:1px solid rgba(255,255,255,.2);border-radius:8px;width:34px;height:34px;display:flex;align-items:center;justify-content:center;color:#fff;cursor:pointer;flex-shrink:0;backdrop-filter:blur(4px);}
-/* Gym medals */
+.prof-hero-btn{background:rgba(10,11,15,.7);border:1px solid rgba(255,255,255,.2);border-radius:8px;width:34px;height:34px;display:flex;align-items:center;justify-content:center;color:#fff;cursor:pointer;}
+/* Medals */
 .gym-medals-section{background:var(--card);border:1px solid var(--brd);border-radius:14px;padding:16px;}
 .medals-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;}
 .medals-counter{margin-left:auto;background:rgba(212,172,13,.12);color:var(--gold);border:1px solid rgba(212,172,13,.35);border-radius:8px;padding:3px 10px;font-size:11px;font-weight:700;font-family:'Orbitron',sans-serif;}
 .badges-region{margin-bottom:14px;}
-.badges-region-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;}
 .badges-flex{display:flex;flex-wrap:wrap;gap:10px;}
-.badge-cell{display:flex;flex-direction:column;align-items:center;gap:4px;width:66px;}
+.badge-cell{display:flex;flex-direction:column;align-items:center;gap:4px;width:64px;}
 .badge-icon{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;}
-.badge-earned .badge-icon{animation:badgePulse 2s infinite alternate;}
-@keyframes badgePulse{from{transform:scale(1);}to{transform:scale(1.1);}}
+.badge-earned .badge-icon{animation:bPulse 2s infinite alternate;}
+@keyframes bPulse{from{transform:scale(1);}to{transform:scale(1.1);}}
 .badge-locked .badge-icon{background:var(--card2)!important;box-shadow:none!important;filter:grayscale(1);}
-.badge-name{font-size:9px;font-weight:700;text-align:center;line-height:1.2;}
-/* Export section */
-.export-section h3{font-size:12px;color:var(--dim);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;display:flex;align-items:center;gap:4px;}
-/* Capture info in card */
-.pkm-species{font-size:9px;color:var(--dim);font-style:italic;margin-left:2px;}
-/* Card shiny/dark borders */
-.card-shiny{border-color:rgba(247,208,44,.4)!important;background:rgba(247,208,44,.03)!important;}
-.card-dark{border-color:rgba(231,76,60,.3)!important;background:rgba(231,76,60,.03)!important;}
-/* Rename btn */
-.cact-rename{background:rgba(52,152,219,.1);color:var(--blue);border-color:rgba(52,152,219,.25);}
-/* field error */
+/* Field error */
 .field-error{border-color:var(--acc)!important;box-shadow:0 0 0 2px rgba(231,76,60,.2)!important;}
-/* Picker */
-.picker-search-in{flex:1;background:none;border:none;color:var(--text);font-family:var(--font);font-size:12px;outline:none;}
-/* Intro field-error */
-.intro-field.field-error{border-color:var(--acc)!important;}
-/* Battle player-side: sprite left */
+/* Faint tag */
+.faint-tag{display:inline-flex;align-items:center;gap:3px;color:var(--acc);font-size:10px;font-weight:700;}
+/* Battle player-side sprite on left */
 .battle-player-side{flex-direction:row!important;}
 .battle-enemy-side{flex-direction:row-reverse!important;}
+
+
+
+
+
+
+
+/* === MEJORAS VISUALES PARA BATALLA === */
+
+/* Efecto de daño en sprites */
+.b-sprite {
+  transition: filter 0.3s ease, transform 0.2s ease;
+}
+
+/* Animación de ataque */
+@keyframes attackShake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px) rotate(-5deg); }
+  75% { transform: translateX(5px) rotate(5deg); }
+}
+
+/* Animación de daño recibido */
+@keyframes damageFlash {
+  0%, 100% { filter: brightness(1); }
+  50% { filter: brightness(2) sepia(1) hue-rotate(-50deg) saturate(5); }
+}
+
+/* Hover en botones de movimiento */
+.mbtn:active {
+  transform: scale(0.97) !important;
+}
+
+/* Indicador de turno activo */
+.strip-slot.active {
+  box-shadow: 0 0 15px rgba(52, 152, 219, 0.4);
+  animation: activePulse 2s infinite;
+}
+
+@keyframes activePulse {
+  0%, 100% { box-shadow: 0 0 10px rgba(52, 152, 219, 0.4); }
+  50% { box-shadow: 0 0 20px rgba(52, 152, 219, 0.7); }
+}
+
+/* Fainted state más visible */
+.strip-slot.fainted {
+  position: relative;
+}
+.strip-slot.fainted::after {
+  content: '✕';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: var(--acc);
+  font-size: 20px;
+  font-weight: 900;
+  text-shadow: 0 2px 4px rgba(0,0,0,.8);
+}
+

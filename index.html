@@ -15,39 +15,47 @@
 <div id="intro-ov" class="intro-overlay"></div>
 <div id="hud">
   <div class="hud-logo">POKEM</div>
-  <div class="hud-gold"><span class="ms" style="font-size:16px;color:var(--gold)">paid</span> <span id="hud-gold">0</span></div>
-  <div class="hud-avatar" id="hud-avatar-wrap" onclick="hudAvatarClick()" style="cursor:pointer">
-    <img id="hud-avatar-img" src="" onerror="this.style.display='none'" alt="">
+
+  <div class="hud-team" id="hud-team"></div>
+<div class="hud-gold"><span class="ms" style="font-size:16px;color:var(--gold)">paid</span> <span id="hud-gold">0</span></div>
+  <div class="hud-avatar" id="hud-avatar-wrap" onclick="hudAvatarClick()" title="Perfil" style="cursor:pointer">
+q    <img id="hud-avatar-img" src="" style="display:none" onerror="this.style.display='none'" alt="">
     <span class="ms" id="hud-avatar-ph" style="font-size:16px;color:var(--dim)">person</span>
   </div>
-  <div class="hud-team" id="hud-team"></div>
 </div>
 <div id="notif"></div>
 <div id="main">
-  <div id="screen-radar" class="screen" style="display:flex">
-    <div id="radar-container" class="radar-container">
-      <canvas id="radar-canvas"></canvas>
-      <!-- Overlays sobre el mapa -->
-      <div class="map-coords-ov" id="radar-coords">X:0 Y:0</div>
-      <button class="map-info-ov-btn" onclick="openMapInfo()"><span class="ms" style="font-size:18px">info</span></button>
-      <!-- Panel de spawns (esquina inferior izquierda) -->
-      <div class="spawn-ov" id="spawn-ov">
-        <div class="spawn-ov-header" onclick="toggleSpawnOv()">
-          <span style="font-size:10px;font-weight:700;letter-spacing:1px;color:var(--text)">APARICIONES</span>
-          <span id="spawn-count-badge" class="spawn-count-badge">0</span>
-          <span class="ms" id="spawn-ov-chevron" style="font-size:14px;color:var(--dim);margin-left:auto">expand_less</span>
+  <!-- RADAR: mapa fullscreen con canvas + overlays -->
+  <div id="screen-radar" class="screen radar-screen" style="display:flex">
+    <div id="radar-wrap" class="radar-wrap">
+      <canvas id="radar-canvas" class="radar-canvas"></canvas>
+      <!-- Coordenadas top-left -->
+      <div id="radar-coords" class="radar-coords">X:0 Y:0</div>
+      <!-- Info del mapa top-right -->
+<button class="hud-map-btn" onclick="openMapSelect()" title="Cambiar mapa">
+    <span class="ms" style="font-size:16px">explore</span>
+  </button>
+      <button class="radar-info-btn" onclick="openMapInfo()">
+        <span class="ms" style="font-size:18px">info</span>
+      </button>
+      <!-- Lista de spawns bottom-left -->
+      <div id="spawn-panel" class="spawn-panel-ov">
+        <div class="spawn-panel-hdr" onclick="toggleSpawnPanel()">
+          <span style="font-size:10px;font-weight:700;letter-spacing:.5px">APARICIONES</span>
+          <span id="spawn-panel-cnt" class="spawn-cnt-badge">0</span>
+          <span class="ms" id="spawn-panel-arrow" style="font-size:14px;margin-left:auto;color:var(--dim)">expand_less</span>
         </div>
-        <div id="spawn-list" class="spawn-ov-body"></div>
+        <div id="spawn-list" class="spawn-list-ov"></div>
       </div>
-      <!-- D-pad (esquina inferior derecha) -->
+      <!-- D-pad bottom-right -->
       <div class="dpad-ov">
-        <div class="dpad-row"><button class="dpad-btn-ov" onclick="move(0,-1)">▲</button></div>
-        <div class="dpad-row">
-          <button class="dpad-btn-ov" onclick="move(-1,0)">◀</button>
-          <div class="dpad-center-ov"><span class="ms" style="font-size:14px;color:var(--dim)">gps_fixed</span></div>
-          <button class="dpad-btn-ov" onclick="move(1,0)">▶</button>
+        <div class="dov-row"><button class="dov-btn" onclick="move(0,-1)">▲</button></div>
+        <div class="dov-row">
+          <button class="dov-btn" onclick="move(-1,0)">◀</button>
+          <div class="dov-center"><span class="ms" style="font-size:13px;color:var(--dim)">gps_fixed</span></div>
+          <button class="dov-btn" onclick="move(1,0)">▶</button>
         </div>
-        <div class="dpad-row"><button class="dpad-btn-ov" onclick="move(0,1)">▼</button></div>
+        <div class="dov-row"><button class="dov-btn" onclick="move(0,1)">▼</button></div>
       </div>
     </div>
   </div>
