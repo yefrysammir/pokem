@@ -2055,7 +2055,7 @@ function showIntro(){
       </div>
       <div style="font-size:12px;color:var(--dim);margin-top:10px;text-align:center">¿Con quién empiezas?</div>
       <div class="starter-grid">
-        ${[1,4,7,25].map(pid=>{const b=PD[pid];
+        ${[1,4,7].map(pid=>{const b=PD[pid];
           return`<div class="starter-opt" id="st-${pid}" onclick="selectStarter(${pid})">
             <div id="container-pkm" ><img src="${b.sp}" class="pkm-spr" onerror="this.style.display='none'"></div>
             <span style="font-size:10px;font-weight:700">${b.n}</span>
